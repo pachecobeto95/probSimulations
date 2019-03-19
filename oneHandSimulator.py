@@ -2,7 +2,18 @@
 #Date: 18/02/2019
 #Last modified: 18/02/2019
 
-import random
+import random, scipy.stats
+import pandas as pd
+import numpy as np
+
+def confidence_interval(data, confidence=0.95):
+    data = 1.0 * np.array(data)
+    n = len(data)
+    mean, se = np.mean(data), scipy.stats.sem(data)
+    h = se * scipy.stats.t.ppf((1 + confidence) / 2., n-1)
+    return mean, h
+
+
 
 #create object card with a number's card and sign
 class Card(object):
@@ -51,10 +62,18 @@ QNTD_NUMBER = 13
 SIGN_LIST = ["copa", "ouro", "espada", "paus"]
 NR_INTERACTIONS = 10000
 SIZE_HAND = 5
+NR_EXPERIMENT = 100
+probabilityList = []
 
-onePair = OnePairExperiment(QNTD_NUMBER, SIGN_LIST, NR_INTERACTIONS, SIZE_HAND)
-probOneHand = onePair.OnePairProb()
-print("A probabilitade do evento de aparecer somente um par: %s"%probOneHand)
+for k in range(NR_EXPERIMENT):
+	onePair = OnePairExperiment(QNTD_NUMBER, SIGN_LIST, NR_INTERACTIONS, SIZE_HAND)
+	probOneHand = onePair.OnePairProb()
+	probabilityList.append(probOneHand)
+
+mean, h = confidence_interval(probabilityList)
+print("O intervalo de confianca: [%s, %s]"%(mean-h, mean+h))
+
+#print("A probabilitade do evento de aparecer somente um par: %s"%probOneHand)
 
 
 
