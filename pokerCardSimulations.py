@@ -199,7 +199,19 @@ class CardsPoker(object):
 		probability = float(singlePair)/float(NR_INTERACTIONS)
 		return probability
 
+	def noPair(self):
+		count = 0
+		for interaction in range(self.NR_INTERACTIONS):
+			deck = self.deckGenerator()
+			cardList = []
+			for i in range(self.SIZE_HAND):
+				card = deck[i].number
+				cardList.append(card)	
+			if(len(set(cardList)) != len(cardList)):
+				count+=1
 
+		probability = float(count)/float(NR_INTERACTIONS)
+		return probability
 
 
 
@@ -217,10 +229,11 @@ for k in range(NR_EXPERIMENT):
 	#flush = experiment.flush()
 	#straight = experiment.straight()
 	#onePair = experiment.onePair()
-	#onePair = experiment.twoPair()
+	#twoPair = experiment.twoPair()
 	#threeOfKind = experiment.threeOfKind()
 	#fourOfKind = experiment.fourOfKind()
-	probabilityList.append(probOneHand)
+	#nopair = experiment.noPair()
+	probabilityList.append(nopair)
 
 mean, h = confidence_interval(probabilityList)
 print("O intervalo de confianca: [%s, %s]"%(mean-h, mean+h))
